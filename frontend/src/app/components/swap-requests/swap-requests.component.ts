@@ -1,0 +1,73 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { SwapService } from '../../services/swap.service';
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Swap Requests</h3>
+    <button class="btn btn-outline-secondary" (click)="load()">Refresh</button>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <h5>Incoming</h5>
+      <ul class="list-group">
+        <li *ngFor="let r of incoming" class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-semibold">Request #{{r.id}}</div>
+            <small class="text-muted">From: {{r.fromUser?.name || r.fromUser?.email}}</small>
+          </div>
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-success" (click)="respond(r.id, true)">Accept</button>
+            <button class="btn btn-outline-danger" (click)="respond(r.id, false)">Decline</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-6">
+      <h5>Outgoing</h5>
+      <ul class="list-group">
+        <li *ngFor="let r of outgoing" class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-semibold">Request #{{r.id}}</div>
+            <small class="text-muted">To: {{r.toUser?.name || r.toUser?.email}}</small>
+          </div>
+          <span class="badge bg-secondary">{{r.status}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="text-danger mt-3" *ngIf="error">{{error}}</div>
+  <div class="text-success mt-3" *ngIf="success">{{success}}</div>
+  `
+})
+export class SwapRequestsComponent implements OnInit {
+  incoming: any[] = [];
+  outgoing: any[] = [];
+  error = '';
+  success = '';
+
+  constructor(private swaps: SwapService) {}
+
+  ngOnInit() { this.load(); }
+
+  load() {
+    this.error = '';
+    this.swaps.listForMe().subscribe({
+      next: (res) => { this.incoming = res.incoming; this.outgoing = res.outgoing; },
+      error: (e) => this.error = e?.error?.message || 'Failed to load swaps'
+    });
+  }
+
+  respond(id: number, accept: boolean) {
+    this.swaps.respond(id, accept).subscribe({
+      next: () => { this.success = accept ? 'Accepted!' : 'Declined.'; this.load(); },
+      error: (e) => this.error = e?.error?.message || 'Action failed'
+    });
+  }
+}
