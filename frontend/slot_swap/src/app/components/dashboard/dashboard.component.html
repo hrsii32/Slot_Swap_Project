@@ -1,0 +1,46 @@
+
+<div class="d-flex justify-content-between align-items-center mb-3"> 
+    <h3>My Events</h3> <button class="btn btn-outline-secondary" (click)="refresh()">Refresh</button> 
+</div> 
+<form class="card card-body mb-3" (ngSubmit)="create()"> 
+    <div class="row g-2"> 
+        <div class="col-md-3"> <input class="form-control" placeholder="Title" [(ngModel)]="form.title" name="title" required> </div> 
+        <div class="col-md-3"> <input class="form-control" type="datetime-local" [(ngModel)]="form.startTime" name="start"> </div> 
+        <div class="col-md-3"> <input class="form-control" type="datetime-local" [(ngModel)]="form.endTime" name="end"> </div> 
+        <div class="col-md-2"> 
+            <select class="form-select" [(ngModel)]="form.status" name="status"> 
+                <option value="BUSY">BUSY</option> 
+                <option value="FREE">FREE</option> 
+                <option value="SWAPPABLE">SWAPPABLE</option> 
+            </select> </div> 
+            <div class="col-md-1"> 
+                <button class="btn btn-primary w-100">Add</button> 
+            </div> 
+        </div> 
+</form> 
+<div class="table-responsive"> 
+    <table class="table table-striped align-middle"> 
+        <thead><tr> <th>Title</th><th>Start</th><th>End</th><th>Status</th><th style="width:160px">Actions</th> </tr></thead> 
+        <tbody> 
+            <tr *ngFor="let e of events"> <td>
+                <input class="form-control" [(ngModel)]="e.title" name="t{{e.id}}"></td> 
+                    <td> <input class="form-control" type="datetime-local" [(ngModel)]="e.startTime" name="s{{e.id}}"></td> 
+                    <td> <input class="form-control" type="datetime-local" [(ngModel)]="e.endTime" name="e{{e.id}}"></td> 
+                    <td>   
+                        <select class="form-select" [(ngModel)]="e.status" name="st{{e.id}}"> 
+                            <option value="BUSY">BUSY</option> 
+                            <option value="FREE">FREE</option>
+                            <option value="SWAPPABLE">SWAPPABLE</option> 
+                        </select> 
+                    </td> 
+                    <td> 
+                        <div class="btn-group btn-group-sm"> 
+                            <button class="btn btn-outline-primary" (click)="save(e)">Save</button> 
+                            <button class="btn btn-outline-danger" (click)="remove(e)">Delete</button> 
+                        </div> 
+                    </td> 
+            </tr> 
+        </tbody> 
+    </table> 
+</div> 
+<div class="text-danger" *ngIf="error">{{error}}</div>

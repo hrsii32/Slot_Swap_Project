@@ -57,8 +57,10 @@ public class SecurityConfig {
         return source;
     }
 
+    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService); // ✅ important
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

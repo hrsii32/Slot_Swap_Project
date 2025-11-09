@@ -53,11 +53,20 @@ export class DashboardComponent implements OnInit {
 
   remove(e: EventEntity) {
     if (!confirm('Delete this event?')) return;
+  
     this.api.delete(e.id).subscribe({
-      next: () => this.refresh(),
-      error: (err) => this.error = err?.error?.message || 'Delete failed'
+      next: () => {
+        this.error = '';
+        this.refresh();
+      },
+      error: (err) => {
+        this.error = err?.error?.error || 'Delete failed';
+        alert(this.error); // ✅ show message immediately
+        this.refresh();
+      }
     });
   }
+  
 
   private toLocalInput(value: string): string {
     const d = new Date(value);

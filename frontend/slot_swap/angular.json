@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frontend": {
+    "slot_swap": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -57,10 +57,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "frontend:build:production"
+              "buildTarget": "slot_swap:build:production"
             },
             "development": {
-              "buildTarget": "frontend:build:development"
+              "buildTarget": "slot_swap:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -22,6 +22,7 @@ import com.example.slot_swap.entity.Event;
 import com.example.slot_swap.entity.EventStatus;
 import com.example.slot_swap.entity.User;
 import com.example.slot_swap.repo.EventRepo;
+import com.example.slot_swap.repo.SwapRequestRepo;
 import com.example.slot_swap.repo.UserRepo;
 
 @RestController
@@ -34,9 +35,13 @@ public class EventController {
     @Autowired
     private final UserRepo userRepo;
 
-    public EventController(EventRepo eventRepo, UserRepo userRepo) {
+    @Autowired
+    private final SwapRequestRepo swapRepo;
+
+    public EventController(EventRepo eventRepo, UserRepo userRepo, SwapRequestRepo swapRepo) {
         this.eventRepo = eventRepo;
         this.userRepo = userRepo;
+        this.swapRepo = swapRepo;
     }
 
     private User getCurrentUser() {
@@ -123,8 +128,16 @@ public class EventController {
                         .body(Map.of("error", "You are not allowed to delete this event"));
             }
 
+            // ✅ Check if event is linked to any swap requests
+            long inSwap = swapRepo.countByMySlotIdOrTheirSlotId(id, id);
+            if (inSwap > 0) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("error", "This slot is part of a swap request and cannot be deleted."));
+            }
+
             eventRepo.delete(e);
             return ResponseEntity.ok(Map.of("message", "Event deleted successfully"));
         }).orElse(ResponseEntity.notFound().build());
     }
+
 }
