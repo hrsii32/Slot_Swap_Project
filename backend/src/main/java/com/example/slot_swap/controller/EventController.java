@@ -128,7 +128,6 @@ public class EventController {
                         .body(Map.of("error", "You are not allowed to delete this event"));
             }
 
-            // ✅ Check if event is linked to any swap requests
             long inSwap = swapRepo.countByMySlotIdOrTheirSlotId(id, id);
             if (inSwap > 0) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)

@@ -1,6 +1,6 @@
 <div class="container my-4">
 
-    <!-- Show navbar only when user is logged in -->
+
     <nav *ngIf="auth.isLoggedIn()" class="navbar navbar-expand navbar-light bg-light rounded px-3 mb-4">
       <a class="navbar-brand fw-semibold" routerLink="/dashboard">Slot Swap</a>
   
@@ -15,7 +15,7 @@
       </button>
     </nav>
   
-    <!-- Displays pages -->
+
     <router-outlet></router-outlet>
   
   </div>
