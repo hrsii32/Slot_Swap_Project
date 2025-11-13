@@ -55,8 +55,8 @@ public class SwapService {
         swap.setStatus(SwapStatus.PENDING);
         swapRepo.save(swap);
 
-        mySlot.setStatus(EventStatus.SWAP_PENDING);
-        theirSlot.setStatus(EventStatus.SWAP_PENDING);
+        mySlot.setStatus(EventStatus.FREE);
+        theirSlot.setStatus(EventStatus.FREE);
         eventRepo.save(mySlot);
         eventRepo.save(theirSlot);
 
